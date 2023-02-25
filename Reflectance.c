@@ -21,7 +21,7 @@
 
 #include <stdint.h>
 #include "msp432.h"
-#include "..\inc\Clock.h"
+#include "Clock.h"
 
 // ------------Reflectance_Init------------
 // Initialize the GPIO pins associated with the QTR-8RC

@@ -1,11 +1,11 @@
 
+#include <Reflectance.h>
 #include <stdint.h>
 #include "msp.h"
-#include "../inc/Clock.h"
-#include "../inc/LaunchPad.h"
-#include "../inc/Reflectance.h"
-#include "../inc/MotorSimple.h"
-#include "../inc/SysTick.h"
+#include "Clock.h"
+#include "LaunchPad.h"
+#include "MotorSimple.h"
+#include "SysTick.h"
 
 
 /*(Left,Right) Motors, call LaunchPad_Output (positive logic)

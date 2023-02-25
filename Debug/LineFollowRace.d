@@ -1,6 +1,7 @@
 # FIXED
 
 LineFollowRace.obj: ../LineFollowRace.c
+LineFollowRace.obj: C:/Users/hayde/OneDrive/Pitt/2022-2023\ Spring\ Term/ECE\ 1188/CCS\ Workspace/LineFollowRace/Reflectance.h
 LineFollowRace.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stdint.h
 LineFollowRace.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/_ti_config.h
 LineFollowRace.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/linkage.h
@@ -19,13 +20,14 @@ LineFollowRace.obj: C:/ti/ccs1210/ccs/ccs_base/arm/include/CMSIS/core_cm4.h
 LineFollowRace.obj: C:/ti/ccs1210/ccs/ccs_base/arm/include/CMSIS/cmsis_compiler.h
 LineFollowRace.obj: C:/ti/ccs1210/ccs/ccs_base/arm/include/CMSIS/cmsis_ccs.h
 LineFollowRace.obj: C:/ti/ccs1210/ccs/ccs_base/arm/include/system_msp432p401r.h
-LineFollowRace.obj: ../../inc/Clock.h
-LineFollowRace.obj: ../../inc/LaunchPad.h
-LineFollowRace.obj: ../../inc/Reflectance.h
-LineFollowRace.obj: ../../inc/MotorSimple.h
-LineFollowRace.obj: ../../inc/SysTick.h
+LineFollowRace.obj: ../Clock.h
+LineFollowRace.obj: ../LaunchPad.h
+LineFollowRace.obj: ../MotorSimple.h
+LineFollowRace.obj: ../SysTick.h
 
 ../LineFollowRace.c:
+
+C:/Users/hayde/OneDrive/Pitt/2022-2023\ Spring\ Term/ECE\ 1188/CCS\ Workspace/LineFollowRace/Reflectance.h:
 
 C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stdint.h:
 
@@ -63,13 +65,11 @@ C:/ti/ccs1210/ccs/ccs_base/arm/include/CMSIS/cmsis_ccs.h:
 
 C:/ti/ccs1210/ccs/ccs_base/arm/include/system_msp432p401r.h:
 
-../../inc/Clock.h:
+../Clock.h:
 
-../../inc/LaunchPad.h:
+../LaunchPad.h:
 
-../../inc/Reflectance.h:
+../MotorSimple.h:
 
-../../inc/MotorSimple.h:
-
-../../inc/SysTick.h:
+../SysTick.h:
 

@@ -19,7 +19,7 @@ Reflectance.obj: C:/ti/ccs1210/ccs/ccs_base/arm/include/CMSIS/core_cm4.h
 Reflectance.obj: C:/ti/ccs1210/ccs/ccs_base/arm/include/CMSIS/cmsis_compiler.h
 Reflectance.obj: C:/ti/ccs1210/ccs/ccs_base/arm/include/CMSIS/cmsis_ccs.h
 Reflectance.obj: C:/ti/ccs1210/ccs/ccs_base/arm/include/system_msp432p401r.h
-Reflectance.obj: ../../inc/Clock.h
+Reflectance.obj: ../Clock.h
 
 ../Reflectance.c:
 
@@ -59,5 +59,5 @@ C:/ti/ccs1210/ccs/ccs_base/arm/include/CMSIS/cmsis_ccs.h:
 
 C:/ti/ccs1210/ccs/ccs_base/arm/include/system_msp432p401r.h:
 
-../../inc/Clock.h:
+../Clock.h:
 
