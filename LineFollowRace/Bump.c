@@ -6,19 +6,28 @@
 // P4.2 Bump1
 // P4.0 Bump0, right side of robot
 
-
+#include <stdint.h>
+#include "msp.h"
+#include "LaunchPad.h"
 #include "Bump.h"
+#include "Motor.h"
 
+
+extern uint8_t bump_detected;
 
 void BumpInt_Init(void){
     P4->IE |= 0xED; //Enabling interrupts for bump pins on port 4
     P4->IES |= 0xED;   //Enabling rising edge interrupt bump pins (I think)
     P4->IFG &= ~0xED; //Clearing interrupt flag
+    NVIC_EnableIRQ(PORT4_IRQn);
     //P4->IV |= 0x0F; //Setting interrupt to low priority (not sure if this is a mistake, or what "low" implies)
 }
 
 void PORT4_IRQHandler(void){
-    //Do something on interrupt
+    LaunchPad_Output(0x01); //Setting LED
+    Motor_Stop();
+    bump_detected = 1;
+    P4->IFG &= ~0xED;       //Clearing Flags
 }
 
 // Initialize Bump sensors

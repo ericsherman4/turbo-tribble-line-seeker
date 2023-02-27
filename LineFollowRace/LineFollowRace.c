@@ -79,6 +79,8 @@ uint8_t read (void) {
     return input;
 }
 
+volatile uint8_t bump_detected = 0;
+
 int main(void){
 
   // Initialize everything
@@ -87,13 +89,19 @@ int main(void){
   Reflectance_Init();
   Motor_Init();
   SysTick_Init();
+  Bump_Init();
+  BumpInt_Init();
+
 
   Spt = Center;
   while(1){
-    Motor_Forward(Spt->left_PWM, Spt->right_PWM);     // do output to two motors
-    SysTick_Wait10ms(1);
-    uint8_t Input = read();    // read sensors
-    Spt = Spt->next[Input];       // next depends on input and state
+      if (!bump_detected)
+      {
+          Motor_Forward(Spt->left_PWM, Spt->right_PWM);     // do output to two motors
+          SysTick_Wait10ms(1);
+          uint8_t Input = read();    // read sensors
+          Spt = Spt->next[Input];       // next depends on input and state
+      }
   }
 }
 
