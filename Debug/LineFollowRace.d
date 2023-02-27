@@ -22,7 +22,7 @@ LineFollowRace.obj: C:/ti/ccs1210/ccs/ccs_base/arm/include/CMSIS/cmsis_ccs.h
 LineFollowRace.obj: C:/ti/ccs1210/ccs/ccs_base/arm/include/system_msp432p401r.h
 LineFollowRace.obj: ../Clock.h
 LineFollowRace.obj: ../LaunchPad.h
-LineFollowRace.obj: ../MotorSimple.h
+LineFollowRace.obj: ../Motor.h
 LineFollowRace.obj: ../SysTick.h
 
 ../LineFollowRace.c:
@@ -69,7 +69,7 @@ C:/ti/ccs1210/ccs/ccs_base/arm/include/system_msp432p401r.h:
 
 ../LaunchPad.h:
 
-../MotorSimple.h:
+../Motor.h:
 
 ../SysTick.h:
 

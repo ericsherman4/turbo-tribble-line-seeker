@@ -10,9 +10,12 @@ CMD_SRCS += \
 
 C_SRCS += \
 ../Clock.c \
+../CortexM.c \
 C:/Users/hayde/OneDrive/Pitt/2022-2023\ Spring\ Term/ECE\ 1188/CCS\ Workspace/inc/LaunchPad.c \
 ../LineFollowRace.c \
+../Motor.c \
 C:/Users/hayde/OneDrive/Pitt/2022-2023\ Spring\ Term/ECE\ 1188/CCS\ Workspace/inc/MotorSimple.c \
+../PWM.c \
 ../Reflectance.c \
 C:/Users/hayde/OneDrive/Pitt/2022-2023\ Spring\ Term/ECE\ 1188/CCS\ Workspace/inc/SysTick.c \
 ../startup_msp432p401r_ccs.c \
@@ -20,9 +23,12 @@ C:/Users/hayde/OneDrive/Pitt/2022-2023\ Spring\ Term/ECE\ 1188/CCS\ Workspace/in
 
 C_DEPS += \
 ./Clock.d \
+./CortexM.d \
 ./LaunchPad.d \
 ./LineFollowRace.d \
+./Motor.d \
 ./MotorSimple.d \
+./PWM.d \
 ./Reflectance.d \
 ./SysTick.d \
 ./startup_msp432p401r_ccs.d \
@@ -30,9 +36,12 @@ C_DEPS += \
 
 OBJS += \
 ./Clock.obj \
+./CortexM.obj \
 ./LaunchPad.obj \
 ./LineFollowRace.obj \
+./Motor.obj \
 ./MotorSimple.obj \
+./PWM.obj \
 ./Reflectance.obj \
 ./SysTick.obj \
 ./startup_msp432p401r_ccs.obj \
@@ -40,9 +49,12 @@ OBJS += \
 
 OBJS__QUOTED += \
 "Clock.obj" \
+"CortexM.obj" \
 "LaunchPad.obj" \
 "LineFollowRace.obj" \
+"Motor.obj" \
 "MotorSimple.obj" \
+"PWM.obj" \
 "Reflectance.obj" \
 "SysTick.obj" \
 "startup_msp432p401r_ccs.obj" \
@@ -50,9 +62,12 @@ OBJS__QUOTED += \
 
 C_DEPS__QUOTED += \
 "Clock.d" \
+"CortexM.d" \
 "LaunchPad.d" \
 "LineFollowRace.d" \
+"Motor.d" \
 "MotorSimple.d" \
+"PWM.d" \
 "Reflectance.d" \
 "SysTick.d" \
 "startup_msp432p401r_ccs.d" \
@@ -60,9 +75,12 @@ C_DEPS__QUOTED += \
 
 C_SRCS__QUOTED += \
 "../Clock.c" \
+"../CortexM.c" \
 "C:/Users/hayde/OneDrive/Pitt/2022-2023 Spring Term/ECE 1188/CCS Workspace/inc/LaunchPad.c" \
 "../LineFollowRace.c" \
+"../Motor.c" \
 "C:/Users/hayde/OneDrive/Pitt/2022-2023 Spring Term/ECE 1188/CCS Workspace/inc/MotorSimple.c" \
+"../PWM.c" \
 "../Reflectance.c" \
 "C:/Users/hayde/OneDrive/Pitt/2022-2023 Spring Term/ECE 1188/CCS Workspace/inc/SysTick.c" \
 "../startup_msp432p401r_ccs.c" \
