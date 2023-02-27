@@ -8,61 +8,52 @@
 #include "SysTick.h"
 #include "Bump.h"
 
-
-/*(Left,Right) Motors, call LaunchPad_Output (positive logic)
-3   1,1     both motors, yellow means go straight
-2   1,0     left motor,  green  means turns right
-1   0,1     right motor, red    means turn left
-0   0,0     both off,    dark   means stop
-(Left,Right) Sensors, call LaunchPad_Input (positive logic)
-3   1,1     both buttons pushed means on line,
-2   1,0     SW2 pushed          means off to right
-1   0,1     SW1 pushed          means off to left
-0   0,0     neither button      means lost
- */
+#define MOTOR_FORWARD 1
+#define MOTOR_LEFT 2
+#define MOTOR_RIGHT 3
+#define MOTOR_BACKWARD 4
 
 // Linked data structure
 struct State {
   uint16_t right_PWM;           // Right wheel PWM
   uint16_t left_PWM;            // Left wheel PWM
-  const struct State *next[64]; // Next if 6-bit input is 0-63
+  uint8_t  function;            // Number for motor function
+  const struct State *next[32]; // Next if 5-bit input is 0-32
 };
 
 typedef const struct State State_t;
 
-#define Center &fsm[0]
-#define Left1  &fsm[1]
-#define Left2  &fsm[2]
-#define Left3  &fsm[3]
-#define Right1 &fsm[4]
-#define Right2 &fsm[5]
-#define Right3 &fsm[6]
-#define Stop   &fsm[7]
-#define Error  &fsm[8]
+#define Center    &fsm[0]
+#define Left1     &fsm[1]
+#define Left2     &fsm[2]
+#define Left3     &fsm[3]
+#define LostLeft  &fsm[4]
+#define Right1    &fsm[5]
+#define Right2    &fsm[6]
+#define Right3    &fsm[7]
+#define LostRight &fsm[8]
+#define Stop      &fsm[9]
+#define Error     &fsm[10]
 
-State_t fsm[9]={
-  {3000, 3000,  {Error, Left3, Left2, Left2, Left1, Left1, Left1, Left1, Right1, Error, Error, Error, Center, Center, Center, Center, Right2, Error, Error, Error, Error, Error, Error, Error, Right1, Error, Error, Error, Center, Center, Center, Center, Right3, Error, Error, Error, Error, Error, Error, Error, Right1, Error, Error, Error, Center, Center, Center, Center, Right2, Error, Error, Error, Error, Error, Error, Error, Right1, Error, Error, Error, Center, Center, Center, Error}}, // Center
-  {2000, 3000,  {Error, Left3, Left2, Left2, Left1, Left1, Left1, Left1, Right1, Error, Error, Error, Center, Center, Center, Center, Right2, Error, Error, Error, Error, Error, Error, Error, Right1, Error, Error, Error, Center, Center, Center, Center, Right3, Error, Error, Error, Error, Error, Error, Error, Right1, Error, Error, Error, Center, Center, Center, Center, Right2, Error, Error, Error, Error, Error, Error, Error, Right1, Error, Error, Error, Center, Center, Center, Error}}, // Left1
-  {1500, 3000,  {Error, Left3, Left2, Left2, Left1, Left1, Left1, Left1, Right1, Error, Error, Error, Center, Center, Center, Center, Right2, Error, Error, Error, Error, Error, Error, Error, Right1, Error, Error, Error, Center, Center, Center, Center, Right3, Error, Error, Error, Error, Error, Error, Error, Right1, Error, Error, Error, Center, Center, Center, Center, Right2, Error, Error, Error, Error, Error, Error, Error, Right1, Error, Error, Error, Center, Center, Center, Error}}, // Left2
-  {   0, 3000,  {Error, Left3, Left2, Left2, Left1, Left1, Left1, Left1, Right1, Error, Error, Error, Center, Center, Center, Center, Right2, Error, Error, Error, Error, Error, Error, Error, Right1, Error, Error, Error, Center, Center, Center, Center, Right3, Error, Error, Error, Error, Error, Error, Error, Right1, Error, Error, Error, Center, Center, Center, Center, Right2, Error, Error, Error, Error, Error, Error, Error, Right1, Error, Error, Error, Center, Center, Center, Error}}, // Left3
+State_t fsm[11]={
+  {3000, 3000, MOTOR_FORWARD, {Error,      Left1,       Left1,   Left1,       Center,  Error,   Left1,   Left1,   Right1,  Error,   Error,   Error,   Right1,  Error,   Error,   Error,   Right1,      Error,   Error,   Error,   Error,   Error,   Error,   Error,   Right1,      Error,   Error,   Error,   Right1,  Error,   Error,   Error}}, // Center
 
-  {3000, 2000,  {Error, Left3, Left2, Left2, Left1, Left1, Left1, Left1, Right1, Error, Error, Error, Center, Center, Center, Center, Right2, Error, Error, Error, Error, Error, Error, Error, Right1, Error, Error, Error, Center, Center, Center, Center, Right3, Error, Error, Error, Error, Error, Error, Error, Right1, Error, Error, Error, Center, Center, Center, Center, Right2, Error, Error, Error, Error, Error, Error, Error, Right1, Error, Error, Error, Center, Center, Center, Error}}, // Right1
-  {3000, 1500,  {Error, Left3, Left2, Left2, Left1, Left1, Left1, Left1, Right1, Error, Error, Error, Center, Center, Center, Center, Right2, Error, Error, Error, Error, Error, Error, Error, Right1, Error, Error, Error, Center, Center, Center, Center, Right3, Error, Error, Error, Error, Error, Error, Error, Right1, Error, Error, Error, Center, Center, Center, Center, Right2, Error, Error, Error, Error, Error, Error, Error, Right1, Error, Error, Error, Center, Center, Center, Error}}, // Right2
-  {3000,    0,  {Error, Left3, Left2, Left2, Left1, Left1, Left1, Left1, Right1, Error, Error, Error, Center, Center, Center, Center, Right2, Error, Error, Error, Error, Error, Error, Error, Right1, Error, Error, Error, Center, Center, Center, Center, Right3, Error, Error, Error, Error, Error, Error, Error, Right1, Error, Error, Error, Center, Center, Center, Center, Right2, Error, Error, Error, Error, Error, Error, Error, Right1, Error, Error, Error, Center, Center, Center, Error}}, // Right3
+  {2500, 3000, MOTOR_FORWARD, {LostLeft,   Left2,       Left2,   Left2,       Center,  Error,   Left1,   Left1,   Error,   Error,   Error,   Error,   Right1,  Error,   Error,   Error,   Error,       Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,       Error,   Error,   Error,   Right1,  Error,   Error,   Error}}, // Left1
+  {2000, 3000, MOTOR_FORWARD, {LostLeft,   Left3,       Left2,   Left2,       Right1,  Error,   Left1,   Left1,   Error,   Error,   Error,   Error,   Right1,  Error,   Error,   Error,   Error,       Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,       Error,   Error,   Error,   Right1,  Error,   Error,   Error}}, // Left2
+  {3000, 3000, MOTOR_LEFT, {LostLeft,   Left3,       Left2,   Left2,       Right2,  Error,   Left2,   Left2,   Error,   Error,   Error,   Error,   Right2,  Error,   Error,   Error,   Error,       Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,       Error,   Error,   Error,   Right2,  Error,   Error,   Error}}, // Left3
+  {3000, 3000, MOTOR_LEFT,    {LostLeft,   Left3,       Left3,   Left3,       Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,   LostRight,   Error,   Error,   Error,   Error,   Error,   Error,   Error,   LostRight,   Error,   Error,   Error,   Error,   Error,   Error,   Error}}, // Lost Left
 
-  {   0,    0,  {Stop,  Stop,  Stop,  Stop,  Stop,  Stop,  Stop,  Stop,  Stop,   Stop,  Stop,  Stop,  Stop,   Stop,   Stop,   Stop,   Stop,   Stop,  Stop,  Stop,  Stop,  Stop,  Stop,  Stop,  Stop,   Stop,  Stop,  Stop,  Stop,   Stop,   Stop,   Stop,   Stop,   Stop,  Stop,  Stop,  Stop,  Stop,  Stop,  Stop,  Stop,   Stop,  Stop,  Stop,  Stop,   Stop,   Stop,   Stop,   Stop,   Stop,  Stop,  Stop,  Stop,  Stop,  Stop,  Stop,  Stop,   Stop,  Stop,  Stop,  Stop,   Stop,   Stop,   Stop}},   // Stop
-  {   0,    0,  {Error, Left3, Left2, Left2, Left1, Left1, Left1, Left1, Right1, Error, Error, Error, Center, Center, Center, Center, Right2, Error, Error, Error, Error, Error, Error, Error, Right1, Error, Error, Error, Center, Center, Center, Center, Right3, Error, Error, Error, Error, Error, Error, Error, Right1, Error, Error, Error, Center, Center, Center, Center, Right2, Error, Error, Error, Error, Error, Error, Error, Right1, Error, Error, Error, Center, Center, Center, Error}}, // Error
+  {3000, 2500, MOTOR_FORWARD, {LostRight,  Error,       Error,   Error,       Center,  Error,   Left1,   Left1,   Right2,  Error,   Error,   Error,   Right1,  Error,   Error,   Error,   Right2,      Error,   Error,   Error,   Error,   Error,   Error,   Error,   Right2,      Error,   Error,   Error,   Right1,  Error,   Error,   Error}}, // Right1
+  {3000, 2000, MOTOR_FORWARD, {LostRight,  Error,       Error,   Error,       Left1,   Error,   Left1,   Left1,   Right2,  Error,   Error,   Error,   Right1,  Error,   Error,   Error,   Right3,      Error,   Error,   Error,   Error,   Error,   Error,   Error,   Right2,      Error,   Error,   Error,   Right1,  Error,   Error,   Error}}, // Right2
+  {3000, 3000, MOTOR_RIGHT, {LostRight,  Error,       Error,   Error,       Left2,   Error,   Left2,   Left2,   Right2,  Error,   Error,   Error,   Right2,  Error,   Error,   Error,   Right3,      Error,   Error,   Error,   Error,   Error,   Error,   Error,   Right2,      Error,   Error,   Error,   Right2,  Error,   Error,   Error}}, // Right3
+  {3000, 3000, MOTOR_RIGHT,   {LostRight,  LostLeft,    Error,   LostLeft,    Error,   Error,   Error,   Error,   Right3,  Error,   Error,   Error,   Error,   Error,   Error,   Error,   Right3,      Error,   Error,   Error,   Error,   Error,   Error,   Error,   Right3,      Error,   Error,   Error,   Error,   Error,   Error,   Error}}, // Lost Right
+
+  {   0,    0, MOTOR_FORWARD, {Stop,       Stop,        Stop,    Stop,        Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,        Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,        Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop}},   // Stop
+  {1000, 1000, MOTOR_FORWARD, {Error,      Left3,       Left2,   Left2,       Center,  Error,   Left1,   Left1,   Right2,  Error,   Error,   Error,   Right2,  Error,   Error,   Error,   Right3,      Error,   Error,   Error,   Error,   Error,   Error,   Error,   Right2,      Error,   Error,   Error,   Right1,  Error,   Error,   Error}}, // Error
 };
 
 State_t *Spt;  // pointer to the current state
 
-
-/*Run FSM continuously
-1) Output depends on State (LaunchPad LED)
-2) Wait depends on State
-3) Input (LaunchPad buttons)
-4) Next depends on (Input,State)
- */
 
 // Convert output from reflectance read function to 6 bits
 uint8_t read (void) {
@@ -71,10 +62,9 @@ uint8_t read (void) {
 
     input |= (data & 0x01) | ((data & 0x02) >> 1);        // Shift bits 0 and 1 to bit 0
     input |= ((data & 0x04) >> 1);                        // Shift bit 2 to bit 1
-    input |= ((data & 0x08) >> 1);                        // Shift bit 3 to bit 2
-    input |= ((data & 0x10) >> 1);                        // Shift bit 4 to bit 3
-    input |= ((data & 0x20) >> 1);                        // Shift bit 5 to bit 4
-    input |= ((data & 0x40) >> 1) | ((data & 0x80) >> 2); // Shift bits 6 and 7 to bit 5
+    input |= ((data & 0x08) >> 1) | ((data & 0x10) >> 2); // Shift bit 3 and 4 to bit 2
+    input |= ((data & 0x20) >> 2);                        // Shift bit 5 to bit 3
+    input |= ((data & 0x40) >> 2) | ((data & 0x80) >> 3); // Shift bits 6 and 7 to bit 4
 
     return input;
 }
@@ -90,7 +80,21 @@ int main(void){
 
   Spt = Center;
   while(1){
-    Motor_Forward(Spt->left_PWM, Spt->right_PWM);     // do output to two motors
+      switch(Spt->function)
+        {
+          case MOTOR_FORWARD:
+              Motor_Forward(Spt->left_PWM, Spt->right_PWM);
+              break;
+          case MOTOR_RIGHT:
+              Motor_Right(Spt->left_PWM, Spt->right_PWM);
+              break;
+          case MOTOR_LEFT:
+              Motor_Left(Spt->left_PWM, Spt->right_PWM);
+              break;
+          case MOTOR_BACKWARD:
+              Motor_Backward(Spt->left_PWM, Spt->right_PWM);
+              break;
+        }
     SysTick_Wait10ms(1);
     uint8_t Input = read();    // read sensors
     Spt = Spt->next[Input];       // next depends on input and state
