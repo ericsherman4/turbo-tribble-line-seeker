@@ -15,6 +15,8 @@
 
 #define MAXSPEED 6000
 
+volatile uint8_t bump_detected = 0;
+
 // Linked data structure
 struct State {
   uint16_t right_PWM;           // Right wheel PWM
@@ -42,12 +44,12 @@ State_t fsm[11]={
 
   {MAXSPEED * 0.9, MAXSPEED, MOTOR_FORWARD, {LostLeft,   Left2,       Left2,   Left2,       Center,  Error,   Left1,   Left1,   Error,   Error,   Error,   Error,   Right1,  Error,   Error,   Error,   Error,       Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,       Error,   Error,   Error,   Right1,  Error,   Error,   Error}}, // Left1
   {MAXSPEED * 0.6, MAXSPEED, MOTOR_FORWARD, {LostLeft,   Left3,       Left2,   Left2,       Right1,  Error,   Left1,   Left1,   Error,   Error,   Error,   Error,   Right1,  Error,   Error,   Error,   Error,       Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,       Error,   Error,   Error,   Right1,  Error,   Error,   Error}}, // Left2
-  {MAXSPEED,       MAXSPEED, MOTOR_LEFT,    {LostLeft,   Left3,       Left2,   Left2,       Right2,  Error,   Left2,   Left2,   Error,   Error,   Error,   Error,   Right2,  Error,   Error,   Error,   Error,       Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,       Error,   Error,   Error,   Right2,  Error,   Error,   Error}}, // Left3
+  {MAXSPEED * 0.5, MAXSPEED, MOTOR_LEFT,    {LostLeft,   Left3,       Left2,   Left2,       Right2,  Error,   Left2,   Left2,   Error,   Error,   Error,   Error,   Right2,  Error,   Error,   Error,   Error,       Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,       Error,   Error,   Error,   Right2,  Error,   Error,   Error}}, // Left3
   {MAXSPEED,       MAXSPEED, MOTOR_LEFT,    {LostLeft,   Left3,       Left3,   Left3,       Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,   LostRight,   Error,   Error,   Error,   Error,   Error,   Error,   Error,   LostRight,   Error,   Error,   Error,   Error,   Error,   Error,   Error}}, // Lost Left
 
   {MAXSPEED, MAXSPEED * 0.9, MOTOR_FORWARD, {LostRight,  Error,       Error,   Error,       Center,  Error,   Left1,   Left1,   Right2,  Error,   Error,   Error,   Right1,  Error,   Error,   Error,   Right2,      Error,   Error,   Error,   Error,   Error,   Error,   Error,   Right2,      Error,   Error,   Error,   Right1,  Error,   Error,   Error}}, // Right1
   {MAXSPEED, MAXSPEED * 0.6, MOTOR_FORWARD, {LostRight,  Error,       Error,   Error,       Left1,   Error,   Left1,   Left1,   Right2,  Error,   Error,   Error,   Right1,  Error,   Error,   Error,   Right3,      Error,   Error,   Error,   Error,   Error,   Error,   Error,   Right2,      Error,   Error,   Error,   Right1,  Error,   Error,   Error}}, // Right2
-  {MAXSPEED, MAXSPEED,       MOTOR_RIGHT, {LostRight,  Error,       Error,   Error,       Left2,   Error,   Left2,   Left2,   Right2,  Error,   Error,   Error,   Right2,  Error,   Error,   Error,   Right3,      Error,   Error,   Error,   Error,   Error,   Error,   Error,   Right2,      Error,   Error,   Error,   Right2,  Error,   Error,   Error}}, // Right3
+  {MAXSPEED, MAXSPEED * 0.5, MOTOR_RIGHT,   {LostRight,  Error,       Error,   Error,       Left2,   Error,   Left2,   Left2,   Right2,  Error,   Error,   Error,   Right2,  Error,   Error,   Error,   Right3,      Error,   Error,   Error,   Error,   Error,   Error,   Error,   Right2,      Error,   Error,   Error,   Right2,  Error,   Error,   Error}}, // Right3
   {MAXSPEED, MAXSPEED,       MOTOR_RIGHT,   {LostRight,  LostLeft,    Error,   LostLeft,    Error,   Error,   Error,   Error,   Right3,  Error,   Error,   Error,   Error,   Error,   Error,   Error,   Right3,      Error,   Error,   Error,   Error,   Error,   Error,   Error,   Right3,      Error,   Error,   Error,   Error,   Error,   Error,   Error}}, // Lost Right
 
   {       0,        0, MOTOR_FORWARD, {Stop,       Stop,        Stop,    Stop,        Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,        Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,        Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop}},   // Stop
@@ -79,27 +81,31 @@ int main(void){
   Reflectance_Init();
   Motor_Init();
   SysTick_Init();
+  Bump_Init();
+  BumpInt_Init();
 
   Spt = Center;
   while(1){
-      switch(Spt->function)
-        {
-          case MOTOR_FORWARD:
-              Motor_Forward(Spt->left_PWM, Spt->right_PWM);
-              break;
-          case MOTOR_RIGHT:
-              Motor_Right(Spt->left_PWM, Spt->right_PWM);
-              break;
-          case MOTOR_LEFT:
-              Motor_Left(Spt->left_PWM, Spt->right_PWM);
-              break;
-          case MOTOR_BACKWARD:
-              Motor_Backward(Spt->left_PWM, Spt->right_PWM);
-              break;
-        }
-    SysTick_Wait10ms(1);
-    uint8_t Input = read();    // read sensors
-    Spt = Spt->next[Input];       // next depends on input and state
+      if (!bump_detected) {
+          switch(Spt->function)
+            {
+              case MOTOR_FORWARD:
+                  Motor_Forward(Spt->left_PWM, Spt->right_PWM);
+                  break;
+              case MOTOR_RIGHT:
+                  Motor_Right(Spt->left_PWM, Spt->right_PWM);
+                  break;
+              case MOTOR_LEFT:
+                  Motor_Left(Spt->left_PWM, Spt->right_PWM);
+                  break;
+              case MOTOR_BACKWARD:
+                  Motor_Backward(Spt->left_PWM, Spt->right_PWM);
+                  break;
+            }
+        SysTick_Wait10ms(1);
+        uint8_t Input = read();    // read sensors
+        Spt = Spt->next[Input];       // next depends on input and state
+      }
   }
 }
 

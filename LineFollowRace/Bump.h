@@ -1,9 +1,6 @@
 #ifndef BUMP_H_
 #define BUMP_H_
 
-#include <stdint.h>
-#include "msp.h"
-
 /**
  * @file      Bump.h
  * @brief     Provide low-level functions that interface bump switches the robot.
@@ -76,6 +73,10 @@ policies, either expressed or implied, of the FreeBSD Project.
  * @return none
  * @brief  Initialize Bump sensors
  */
+
+
+
+
 void Bump_Init(void);
 
 void BumpInt_Init(void);

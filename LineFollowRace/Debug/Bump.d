@@ -1,7 +1,6 @@
 # FIXED
 
 Bump.obj: ../Bump.c
-Bump.obj: ../Bump.h
 Bump.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stdint.h
 Bump.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/_ti_config.h
 Bump.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/linkage.h
@@ -20,10 +19,11 @@ Bump.obj: C:/ti/ccs1210/ccs/ccs_base/arm/include/CMSIS/core_cm4.h
 Bump.obj: C:/ti/ccs1210/ccs/ccs_base/arm/include/CMSIS/cmsis_compiler.h
 Bump.obj: C:/ti/ccs1210/ccs/ccs_base/arm/include/CMSIS/cmsis_ccs.h
 Bump.obj: C:/ti/ccs1210/ccs/ccs_base/arm/include/system_msp432p401r.h
+Bump.obj: ../LaunchPad.h
+Bump.obj: ../Bump.h
+Bump.obj: ../Motor.h
 
 ../Bump.c:
-
-../Bump.h:
 
 C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stdint.h:
 
@@ -60,4 +60,10 @@ C:/ti/ccs1210/ccs/ccs_base/arm/include/CMSIS/cmsis_compiler.h:
 C:/ti/ccs1210/ccs/ccs_base/arm/include/CMSIS/cmsis_ccs.h:
 
 C:/ti/ccs1210/ccs/ccs_base/arm/include/system_msp432p401r.h:
+
+../LaunchPad.h:
+
+../Bump.h:
+
+../Motor.h:
 
