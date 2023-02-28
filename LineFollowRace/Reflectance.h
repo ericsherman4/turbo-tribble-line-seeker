@@ -127,7 +127,7 @@ uint8_t Reflectance_Read(uint32_t time);
  * @note Assumes Reflectance_Init() has been called
  * @brief  Read the two center sensors.
 */
-uint8_t Reflectance_Center(uint32_t time);
+//uint8_t Reflectance_Center(uint32_t time);
 
 
 /**
@@ -149,7 +149,7 @@ uint8_t Reflectance_Center(uint32_t time);
  * @brief  Perform sensor integration.
  * @note returns 333 if data is zero (off the line)
  * */
-int32_t Reflectance_Position(uint8_t data);
+//int32_t Reflectance_Position(uint8_t data);
 
 /**
  * <b>Begin the process of reading the eight sensors</b>:<br>
@@ -161,7 +161,7 @@ int32_t Reflectance_Position(uint8_t data);
  * @note Assumes Reflectance_Init() has been called
  * @brief  Beging reading the eight sensors.
  */
-void Reflectance_Start(void);
+//void Reflectance_Start(void);
 
 
 /**
@@ -174,7 +174,7 @@ void Reflectance_Start(void);
  * @note Assumes Reflectance_Start() was called 1 ms ago
  * @brief  Read the eight sensors.
  */
-uint8_t Reflectance_End(void);
+//uint8_t Reflectance_End(void);
 
 /**
  * <b>Return last reading</b>
@@ -185,6 +185,6 @@ uint8_t Reflectance_End(void);
  * @note  Assumes: Reflectance_End() was called 1 ms after Start
  * @brief  Get last reading of the eight sensors.
  */
-uint8_t Reflectance_Get(void);
+//uint8_t Reflectance_Get(void);
 
 #endif /* REFLECTANCE_H_ */

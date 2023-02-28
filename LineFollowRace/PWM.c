@@ -119,26 +119,26 @@ void PWM_Init34(uint16_t period, uint16_t duty3, uint16_t duty4){
 // Inputs:  duty3
 // Outputs: none
 // period of P2.6 is 2*period*666.7ns, duty cycle is duty3/period
-void PWM_Duty3(uint16_t duty3){
-    // write this as part of Lab 13
-    if(duty3 > TIMER_A0->CCR[0]) return; //if duty3 > period, bad input
-
-    // otherwise set the new duty cycle.
-    TIMER_A0->CCR[3] = duty3;
-}
+//void PWM_Duty3(uint16_t duty3){
+//    // write this as part of Lab 13
+//    if(duty3 > TIMER_A0->CCR[0]) return; //if duty3 > period, bad input
+//
+//    // otherwise set the new duty cycle.
+//    TIMER_A0->CCR[3] = duty3;
+//}
 
 //***************************PWM_Duty4*******************************
 // change duty cycle of PWM output on P2.7
 // Inputs:  duty4
 // Outputs: none
 // period of P2.7 is 2*period*666.7ns, duty cycle is duty2/period
-void PWM_Duty4(uint16_t duty4){
-    // write this as part of Lab 13
-    if(duty4 > TIMER_A0->CCR[0]) return; //if duty3 > period, bad input
-
-    // otherwise set the new duty cycle.
-    TIMER_A0->CCR[4] = duty4;
-  
-}
+//void PWM_Duty4(uint16_t duty4){
+//    // write this as part of Lab 13
+//    if(duty4 > TIMER_A0->CCR[0]) return; //if duty3 > period, bad input
+//
+//    // otherwise set the new duty cycle.
+//    TIMER_A0->CCR[4] = duty4;
+//
+//}
 
 #endif

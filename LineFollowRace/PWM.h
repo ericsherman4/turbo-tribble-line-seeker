@@ -85,7 +85,7 @@ void PWM_Init34(uint16_t period, uint16_t duty3, uint16_t duty4);
  * @warning  duty3 must be less than period
  * @brief    set duty cycle on PWM3
  */
-void PWM_Duty3(uint16_t duty3);
+//void PWM_Duty3(uint16_t duty3);
 
 /**
  * @details  Set duty cycle on P2.7
@@ -95,6 +95,6 @@ void PWM_Duty3(uint16_t duty3);
  * @warning  duty4 must be less than period
  * @brief    set duty cycle on PWM4
  */
-void PWM_Duty4(uint16_t duty4);
+//void PWM_Duty4(uint16_t duty4);
 
 #endif

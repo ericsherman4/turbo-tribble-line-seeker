@@ -63,16 +63,6 @@ policies, either expressed or implied, of the FreeBSD Project.
 void Clock_Init48MHz(void);
 
 
-/**
- * Return the current bus clock frequency
- * @param none
- * @return frequency of the system clock in Hz
- * @note  In this module, the return result will be 3000000 or 48000000
- * @see Clock_Init48MHz()
- * @brief Returns current clock bus frequency in Hz
- */
-uint32_t Clock_GetFreq(void);
-
 
 /**
  * Simple delay function which delays about n milliseconds.

@@ -126,15 +126,6 @@ void Clock_Init48MHz(void){
 //  SubsystemFrequency = 12000000;
 }
 
-// ------------Clock_GetFreq------------
-// Return the current system clock frequency for the
-// LaunchPad.
-// Input: none
-// Output: system clock frequency in cycles/second
-uint32_t Clock_GetFreq(void){
-  return ClockFrequency;
-}
-
 
 // delay function
 // which delays about 6*ulCount cycles

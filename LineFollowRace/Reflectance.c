@@ -89,8 +89,16 @@ uint8_t Reflectance_Read(uint32_t time){
     P5->OUT &= ~0x08; // Turn even sensor LEDs (P5.3) off
     P9->OUT &= ~0x04; // Turn odd sensor LEDs (P9.2) off
 
+    uint8_t input = 0x00;
+
+    input |= (result & 0x01) | ((result & 0x02) >> 1);        // Shift bits 0 and 1 to bit 0
+    input |= ((result & 0x04) >> 1);                        // Shift bit 2 to bit 1
+    input |= ((result & 0x08) >> 1) | ((result & 0x10) >> 2); // Shift bit 3 and 4 to bit 2
+    input |= ((result & 0x20) >> 2);                        // Shift bit 5 to bit 3
+    input |= ((result & 0x40) >> 2) | ((result & 0x80) >> 3); // Shift bits 6 and 7 to bit 4
+
     // Return the result
-    return result;
+    return input;
 }
 
 // ------------Reflectance_Center------------
@@ -109,42 +117,42 @@ uint8_t Reflectance_Read(uint32_t time){
 // 1,0          left left      off to right
 // 0,0          neither        lost
 // Assumes: Reflectance_Init() has been called
-uint8_t Reflectance_Center(uint32_t time){
-
-    // Call the function to read the sensors
-    uint8_t sensors = Reflectance_Read(time);
-
-    // Store result as bit-shifted and masked sensor data
-    uint8_t result = (sensors & 0x18) >> 3;
-
-  return result;
-}
+//uint8_t Reflectance_Center(uint32_t time){
+//
+//    // Call the function to read the sensors
+//    uint8_t sensors = Reflectance_Read(time);
+//
+//    // Store result as bit-shifted and masked sensor data
+//    uint8_t result = (sensors & 0x18) >> 3;
+//
+//  return result;
+//}
 
 
 // Perform sensor integration
 // Input: data is 8-bit result from line sensor
 // Output: position in um relative to center of line
-int32_t Reflectance_Position(uint8_t data){
-
-    // Set the weights of each sensor
-    int32_t weights[8] = {-33400, -23800, -14300, -4800, 4800, 14300, 23800, 33400};
-
-    // Calculate the weighted average of the binary sensor states
-    int32_t num = 0; // Calculate the numerator
-    int i;
-    for (i=0;i<8;i++) {
-        num += ((data >> i) & 0x01) * weights[i];
-    }
-    int32_t den = 0; // Calculate the denominator
-    for (i=0;i<8;i++) {
-        den += ((data >> i) & 0x01);
-    }
-
-    // Calculate the distance from the center line
-    int32_t distance = num / den;
-
- return distance;
-}
+//int32_t Reflectance_Position(uint8_t data){
+//
+//    // Set the weights of each sensor
+//    int32_t weights[8] = {-33400, -23800, -14300, -4800, 4800, 14300, 23800, 33400};
+//
+//    // Calculate the weighted average of the binary sensor states
+//    int32_t num = 0; // Calculate the numerator
+//    int i;
+//    for (i=0;i<8;i++) {
+//        num += ((data >> i) & 0x01) * weights[i];
+//    }
+//    int32_t den = 0; // Calculate the denominator
+//    for (i=0;i<8;i++) {
+//        den += ((data >> i) & 0x01);
+//    }
+//
+//    // Calculate the distance from the center line
+//    int32_t distance = num / den;
+//
+// return distance;
+//}
 
 
 // ------------Reflectance_Start------------
@@ -155,9 +163,9 @@ int32_t Reflectance_Position(uint8_t data){
 // Input: none
 // Output: none
 // Assumes: Reflectance_Init() has been called
-void Reflectance_Start(void){
-    // write this as part of Lab 10
-}
+//void Reflectance_Start(void){
+//    // write this as part of Lab 10
+//}
 
 
 // ------------Reflectance_End------------
@@ -168,9 +176,9 @@ void Reflectance_Start(void){
 // Output: sensor readings
 // Assumes: Reflectance_Init() has been called
 // Assumes: Reflectance_Start() was called 1 ms ago
-uint8_t Reflectance_End(void){
-    // write this as part of Lab 10
- return 0; // replace this line
-}
+//uint8_t Reflectance_End(void){
+//    // write this as part of Lab 10
+// return 0; // replace this line
+//}
 
 

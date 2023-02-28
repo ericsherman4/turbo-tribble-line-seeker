@@ -8,7 +8,6 @@
 
 #include <stdint.h>
 #include "msp.h"
-#include "LaunchPad.h"
 #include "Bump.h"
 #include "Motor.h"
 
@@ -24,7 +23,6 @@ void BumpInt_Init(void){
 }
 
 void PORT4_IRQHandler(void){
-    LaunchPad_Output(0x01); //Setting LED
     Motor_Stop();
     bump_detected = 1;
     P4->IFG &= ~0xED;       //Clearing Flags
@@ -40,19 +38,5 @@ void Bump_Init(void){
     P4-> DIR |= 0xED;
     P4-> REN |= 0xED; //Enabling pull-up resistors
     P4-> OUT |= 0xED;
-}
-// Read current state of 6 switches
-// Returns a 6-bit positive logic result (0 to 63)
-// bit 5 Bump5
-// bit 4 Bump4
-// bit 3 Bump3
-// bit 2 Bump2
-// bit 1 Bump1
-// bit 0 Bump0
-uint8_t Bump_Read(void){
-    uint8_t bump, bumpOut; //Creating read variables
-    bump = P4->IN; //Reading from input register
-    bumpOut = (~bump&0x80) >> 2 | (~bump&0x40) >> 2 | (~bump&0x20) >> 2| (~bump&0x08) >> 1 | (~bump&0x04) >> 1 | (~bump&0x01); //Inverting and shifting bumper bits to align with a 6 bit output
-    return bumpOut;
 }
 
