@@ -102,20 +102,23 @@ State_t *Spt;  // pointer to the current state
 //}
 
 
-#warning "INITIALIZE ALL PINS TO LOW"
-#warning "we can probably just do it in this file and then delete the launchpad files"
+//#warning "INITIALIZE ALL PINS TO LOW"
+//#warning "we can probably just do it in this file and then delete the launchpad files"
+
+void allPortsDisable_Init();
 
 int main(void){
 
   // Initialize everything
   Clock_Init48MHz();
+  allPortsDisable_Init();
   LaunchPad_Init();
   Reflectance_Init();
   Motor_Init();
   SysTick_Init();
   Bump_Init();
   BumpInt_Init();
-
+  bump_detected = 0;
   SysTick_Wait(240038/5*1000);
 
   Spt = Center;
@@ -148,3 +151,37 @@ int main(void){
   }
 }
 
+
+
+void allPortsDisable_Init() //Setting all pins to output low
+{
+    P1->DIR |= 0xFF;
+    P1->OUT &= ~0xFF;
+
+    P2->DIR |= 0xFF;
+    P2->OUT &= ~0xFF;
+
+    P3->DIR |= 0xFF;
+    P3->OUT &= ~0xFF;
+
+    P4->DIR |= 0xFF;
+    P4->OUT &= ~0xFF;
+
+    P5->DIR |= 0xFF;
+    P5->OUT &= ~0xFF;
+
+    P6->DIR |= 0xFF;
+    P6->OUT &= ~0xFF;
+
+    P7->DIR |= 0xFF;
+    P7->OUT &= ~0xFF;
+
+    P8->DIR |= 0xFF;
+    P8->OUT &= ~0xFF;
+
+    P9->DIR |= 0xFF;
+    P9->OUT &= ~0xFF;
+
+    P10->DIR |= 0xFF;
+    P10->OUT &= ~0xFF;
+}

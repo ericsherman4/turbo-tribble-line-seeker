@@ -1,7 +1,7 @@
 # FIXED
 
 LineFollowRace.obj: ../LineFollowRace.c
-LineFollowRace.obj: C:/Users/esher/workspace_v12/turbo-tribble-line-seeker/LineFollowRace/Reflectance.h
+LineFollowRace.obj: C:/Users/gallo.HOTMETAL/Documents/Pitt\ Spring\ 23/turbo-tribble-line-seeker/LineFollowRace/Reflectance.h
 LineFollowRace.obj: C:/ti/ccs1220/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stdint.h
 LineFollowRace.obj: C:/ti/ccs1220/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/_ti_config.h
 LineFollowRace.obj: C:/ti/ccs1220/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/linkage.h
@@ -28,7 +28,7 @@ LineFollowRace.obj: ../Bump.h
 
 ../LineFollowRace.c:
 
-C:/Users/esher/workspace_v12/turbo-tribble-line-seeker/LineFollowRace/Reflectance.h:
+C:/Users/gallo.HOTMETAL/Documents/Pitt\ Spring\ 23/turbo-tribble-line-seeker/LineFollowRace/Reflectance.h:
 
 C:/ti/ccs1220/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stdint.h:
 
