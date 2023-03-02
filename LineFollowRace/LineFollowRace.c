@@ -13,7 +13,16 @@
 #define MOTOR_RIGHT 3
 #define MOTOR_BACKWARD 4
 
-#define MAXSPEED 6000
+#define RED        0x01
+#define GREEN      0x02
+#define BLUE       0x04
+#define DARK       0x00
+#define YELLOW     (RED + GREEN)
+#define SKY_BLUE   (GREEN + BLUE)
+#define WHITE      (GREEN + RED + BLUE)
+#define PINK       (RED + BLUE)
+
+#define MAXSPEED 8000
 
 volatile uint8_t bump_detected = 0;
 
@@ -22,6 +31,7 @@ struct State {
   uint16_t right_PWM;           // Right wheel PWM
   uint16_t left_PWM;            // Left wheel PWM
   uint8_t  function;            // Number for motor function
+  uint8_t color;
   const struct State *next[32]; // Next if 5-bit input is 0-32
 };
 
@@ -41,37 +51,37 @@ typedef const struct State State_t;
 
 State_t fsm[11]={
   // Center
-  {MAXSPEED, MAXSPEED, MOTOR_FORWARD, {Error,      Left1,       Left1,   Left1,       Center,  Error,   Left1,   Left1,   Right1,  Error,   Error,   Error,   Right1,  Error,   Error,   Error,   Right1,      Error,   Error,   Error,   Error,   Error,   Error,   Error,   Right1,      Error,   Error,   Error,   Right1,  Error,   Error,   Error}}, // Center
+  {MAXSPEED, MAXSPEED, MOTOR_FORWARD, DARK,  {Error,      Left1,       Left1,   Left1,       Center,  Error,   Left1,   Left1,   Right1,  Error,   Error,   Error,   Right1,  Error,   Error,   Error,   Right1,      Error,   Error,   Error,   Error,   Error,   Error,   Error,   Right1,      Error,   Error,   Error,   Right1,  Error,   Error,   Error}}, // Center
 
   // Left1
-  {MAXSPEED * 0.95, MAXSPEED, MOTOR_FORWARD, {LostLeft,   Left2,       Left2,   Left2,       Center,  Error,   Left1,   Left1,   Error,   Error,   Error,   Error,   Right1,  Error,   Error,   Error,   Error,       Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,       Error,   Error,   Error,   Right1,  Error,   Error,   Error}}, // Left1
+  {MAXSPEED * (0.85 - 0.05), MAXSPEED, MOTOR_FORWARD, WHITE , {LostLeft,   Left2,       Left2,   Left2,       Center,  Error,   Left1,   Left1,   Error,   Error,   Error,   Error,   Right1,  Error,   Error,   Error,   Error,       Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,       Error,   Error,   Error,   Right1,  Error,   Error,   Error}}, // Left1
 
   //Left2
-  {MAXSPEED * 0.90, MAXSPEED, MOTOR_FORWARD, {LostLeft,   Left3,       Left2,   Left2,       Right1,  Error,   Left1,   Left1,   Error,   Error,   Error,   Error,   Right1,  Error,   Error,   Error,   Error,       Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,       Error,   Error,   Error,   Right1,  Error,   Error,   Error}}, // Left2
+  {MAXSPEED * (0.8 - 0.4) , MAXSPEED, MOTOR_FORWARD, SKY_BLUE ,{LostLeft,   Left3,       Left2,   Left2,       Right1,  Error,   Left1,   Left1,   Error,   Error,   Error,   Error,   Right1,  Error,   Error,   Error,   Error,       Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,       Error,   Error,   Error,   Right1,  Error,   Error,   Error}}, // Left2
 
   //Left3
-  {MAXSPEED * 0.5, MAXSPEED, MOTOR_LEFT,    {LostLeft,   Left3,       Left2,   Left2,       Right2,  Error,   Left2,   Left2,   Error,   Error,   Error,   Error,   Right2,  Error,   Error,   Error,   Error,       Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,       Error,   Error,   Error,   Right2,  Error,   Error,   Error}}, // Left3
+  {MAXSPEED * (0.1), MAXSPEED, MOTOR_LEFT, BLUE ,  {LostLeft,   Left3,       Left2,   Left2,       Right2,  Error,   Left2,   Left2,   Error,   Error,   Error,   Error,   Right2,  Error,   Error,   Error,   Error,       Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,       Error,   Error,   Error,   Right2,  Error,   Error,   Error}}, // Left3
 
   // Lost Left
-  {MAXSPEED,       MAXSPEED, MOTOR_LEFT,    {LostLeft,   Left3,       Left3,   Left3,       Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,   LostRight,   Error,   Error,   Error,   Error,   Error,   Error,   Error,   LostRight,   Error,   Error,   Error,   Error,   Error,   Error,   Error}}, // Lost Left
+  {MAXSPEED*0.8,       MAXSPEED, MOTOR_LEFT,  GREEN,  {LostLeft,   Left3,       Left3,   Left3,       Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,   Error,   LostRight,   Error,   Error,   Error,   Error,   Error,   Error,   Error,   LostRight,   Error,   Error,   Error,   Error,   Error,   Error,   Error}}, // Lost Left
 
   // Right1
-  {MAXSPEED, MAXSPEED * 0.95, MOTOR_FORWARD, {LostRight,  Error,       Error,   Error,       Center,  Error,   Left1,   Left1,   Right2,  Error,   Error,   Error,   Right1,  Error,   Error,   Error,   Right2,      Error,   Error,   Error,   Error,   Error,   Error,   Error,   Right2,      Error,   Error,   Error,   Right1,  Error,   Error,   Error}}, // Right1
+  {MAXSPEED, MAXSPEED * (0.85 - 0.05), MOTOR_FORWARD, PINK ,{LostRight,  Error,       Error,   Error,       Center,  Error,   Left1,   Left1,   Right2,  Error,   Error,   Error,   Right1,  Error,   Error,   Error,   Right2,      Error,   Error,   Error,   Error,   Error,   Error,   Error,   Right2,      Error,   Error,   Error,   Right1,  Error,   Error,   Error}}, // Right1
 
   //Right2
-  {MAXSPEED, MAXSPEED * 0.90, MOTOR_FORWARD, {LostRight,  Error,       Error,   Error,       Left1,   Error,   Left1,   Left1,   Right2,  Error,   Error,   Error,   Right1,  Error,   Error,   Error,   Right3,      Error,   Error,   Error,   Error,   Error,   Error,   Error,   Right2,      Error,   Error,   Error,   Right1,  Error,   Error,   Error}}, // Right2
+  {MAXSPEED, MAXSPEED * (0.8 - 0.4), MOTOR_FORWARD, YELLOW ,{LostRight,  Error,       Error,   Error,       Left1,   Error,   Left1,   Left1,   Right2,  Error,   Error,   Error,   Right1,  Error,   Error,   Error,   Right3,      Error,   Error,   Error,   Error,   Error,   Error,   Error,   Right2,      Error,   Error,   Error,   Right1,  Error,   Error,   Error}}, // Right2
 
   //Right3
-  {MAXSPEED, MAXSPEED * 0.5, MOTOR_RIGHT,   {LostRight,  Error,       Error,   Error,       Left2,   Error,   Left2,   Left2,   Right2,  Error,   Error,   Error,   Right2,  Error,   Error,   Error,   Right3,      Error,   Error,   Error,   Error,   Error,   Error,   Error,   Right2,      Error,   Error,   Error,   Right2,  Error,   Error,   Error}}, // Right3
+  {MAXSPEED, MAXSPEED * (0.1), MOTOR_RIGHT, RED , {LostRight,  Error,       Error,   Error,       Left2,   Error,   Left2,   Left2,   Right2,  Error,   Error,   Error,   Right2,  Error,   Error,   Error,   Right3,      Error,   Error,   Error,   Error,   Error,   Error,   Error,   Right2,      Error,   Error,   Error,   Right2,  Error,   Error,   Error}}, // Right3
 
   // Lost right
-  {MAXSPEED, MAXSPEED,       MOTOR_RIGHT,   {LostRight,  LostLeft,    Error,   LostLeft,    Error,   Error,   Error,   Error,   Right3,  Error,   Error,   Error,   Error,   Error,   Error,   Error,   Right3,      Error,   Error,   Error,   Error,   Error,   Error,   Error,   Right3,      Error,   Error,   Error,   Error,   Error,   Error,   Error}}, // Lost Right
+  {MAXSPEED, MAXSPEED*0.8,       MOTOR_RIGHT, GREEN , {LostRight,  LostLeft,    Error,   LostLeft,    Error,   Error,   Error,   Error,   Right3,  Error,   Error,   Error,   Error,   Error,   Error,   Error,   Right3,      Error,   Error,   Error,   Error,   Error,   Error,   Error,   Right3,      Error,   Error,   Error,   Error,   Error,   Error,   Error}}, // Lost Right
 
   //Stop
-  {       0,        0, MOTOR_FORWARD, {Stop,       Stop,        Stop,    Stop,        Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,        Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,        Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop}},   // Stop
+  {       0,        0, MOTOR_FORWARD,  DARK ,{Stop,       Stop,        Stop,    Stop,        Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,        Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop,        Stop,    Stop,    Stop,    Stop,    Stop,    Stop,    Stop}},   // Stop
 
   //Error
-  {MAXSPEED, MAXSPEED, MOTOR_FORWARD, {Error,      Left3,       Left2,   Left2,       Center,  Error,   Left1,   Left1,   Right2,  Error,   Error,   Error,   Right2,  Error,   Error,   Error,   Right3,      Error,   Error,   Error,   Error,   Error,   Error,   Error,   Right2,      Error,   Error,   Error,   Right1,  Error,   Error,   Error}}, // Error
+  {MAXSPEED, MAXSPEED, MOTOR_FORWARD, DARK , {Error,      Left3,       Left2,   Left2,       Center,  Error,   Left1,   Left1,   Right2,  Error,   Error,   Error,   Right2,  Error,   Error,   Error,   Right3,      Error,   Error,   Error,   Error,   Error,   Error,   Error,   Right2,      Error,   Error,   Error,   Right1,  Error,   Error,   Error}}, // Error
 };
 
 State_t *Spt;  // pointer to the current state
@@ -99,15 +109,18 @@ int main(void){
 
   // Initialize everything
   Clock_Init48MHz();
-//  LaunchPad_Init();
+  LaunchPad_Init();
   Reflectance_Init();
   Motor_Init();
   SysTick_Init();
   Bump_Init();
   BumpInt_Init();
 
+  SysTick_Wait(240038/5*1000);
+
   Spt = Center;
   while(1){
+      LaunchPad_Output(Spt->color);
       if (!bump_detected) {
           switch(Spt->function)
             {
@@ -126,10 +139,11 @@ int main(void){
             }
 //        SysTick_Wait10ms(1);
           //20.83ns
-          // 1ms
+          // 1ms= 240038/5
           SysTick_Wait(240038/5);
         uint8_t Input = Reflectance_Read(1000);    // read sensors
         Spt = Spt->next[Input];       // next depends on input and state
+
       }
   }
 }

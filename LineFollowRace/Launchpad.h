@@ -87,7 +87,7 @@ policies, either expressed or implied, of the FreeBSD Project.
  * @return none
  * @brief  Initialize Switch inputs and LED outputs
  */
-// void LaunchPad_Init(void);
+ void LaunchPad_Init(void);
 
 
 /**
@@ -122,6 +122,6 @@ policies, either expressed or implied, of the FreeBSD Project.
  * @return none
  * @brief  Output to 3-color LED
  */
-// void LaunchPad_Output(uint8_t data);
+ void LaunchPad_Output(uint8_t data);
 
 #endif

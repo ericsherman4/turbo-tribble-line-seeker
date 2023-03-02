@@ -53,19 +53,19 @@ policies, either expressed or implied, of the FreeBSD Project.
 // Initialize Switch input and LED output
 // Input: none
 // Output: none
-//void LaunchPad_Init(void){
-//  P1->SEL0 &= ~0x13;
-//  P1->SEL1 &= ~0x13;    // 1) configure P1.4, P1.1, and P1.0 as GPIO
-//  P1->DIR &= ~0x12;     // 2) make P1.4 and P1.1 in
-//  P1->DIR |= 0x01;      //    make P1.0 out
-//  P1->REN |= 0x12;      // 3) enable pull resistors on P1.4 and P1.1
-//  P1->OUT |= 0x12;      //    P1.4 and P1.1 are pull-up
-//  P2->SEL0 &= ~0x07;
-//  P2->SEL1 &= ~0x07;    // 1) configure P2.2-P2.0 as GPIO
-//  P2->DIR |= 0x07;      // 2) make P2.2-P2.0 out
-//  P2->DS |= 0x07;       // 3) activate increased drive strength
-//  P2->OUT &= ~0x07;     //    all LEDs off
-//}
+void LaunchPad_Init(void){
+  P1->SEL0 &= ~0x13;
+  P1->SEL1 &= ~0x13;    // 1) configure P1.4, P1.1, and P1.0 as GPIO
+  P1->DIR &= ~0x12;     // 2) make P1.4 and P1.1 in
+  P1->DIR |= 0x01;      //    make P1.0 out
+  P1->REN |= 0x12;      // 3) enable pull resistors on P1.4 and P1.1
+  P1->OUT |= 0x12;      //    P1.4 and P1.1 are pull-up
+  P2->SEL0 &= ~0x07;
+  P2->SEL1 &= ~0x07;    // 1) configure P2.2-P2.0 as GPIO
+  P2->DIR |= 0x07;      // 2) make P2.2-P2.0 out
+  P2->DS |= 0x07;       // 3) activate increased drive strength
+  P2->OUT &= ~0x07;     //    all LEDs off
+}
 
 //------------LaunchPad_Input------------
 // Input from Switches 
@@ -90,6 +90,6 @@ policies, either expressed or implied, of the FreeBSD Project.
 // Output to LaunchPad LEDs 
 // Input: 0 off, bit0=red,bit1=green,bit2=blue
 // Output: none
-// void LaunchPad_Output(uint8_t data){  // write three outputs bits of P2
-//   P2->OUT = (P2->OUT&0xF8)|data;
-// }
+ void LaunchPad_Output(uint8_t data){  // write three outputs bits of P2
+   P2->OUT = (P2->OUT&0xF8)|data;
+ }
